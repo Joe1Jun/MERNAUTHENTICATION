@@ -1,19 +1,26 @@
-const mongoose = require('mongoose');
+// Importing the mongoose library for MongoDB object modeling
 
-module.exports = () => {
-
-    const connectionParams = {
+const mongoose = require('mongoose')
+// Define an asynchronous function to connect to the MongoDB database
+// The connection to the database is  over the network and therefore requires asynchronous operation because is can take time to complete
+// the function pauses at the await keyword until the promise resolves or rejects
+const db = async () => {
     
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-
-    };
     try {
-        mongoose.connect(process.env.DB, connectionParams)
-        console.log("Connected to DB")
+ // Set mongoose option to avoid deprecation warning
+        mongoose.set('strictQuery', false)
+        // Attempt to connect to the MongoDB database using the connection string from the environment variables
+        await mongoose.connect(process.env.MONGO_URL)
+        // Log a success message if the connection is established
+        
+        console.log('Db connected')
     } catch (error) {
+        // Log the error message if the connection fails
         console.log(error)
-        console.log("Could not connect to database")
-    }
+      // Log a custom error message for clarity
 
+        console.log('DB Connection Error')
+    }
 }
+// Export the db function so it can be used in other parts of the application
+module.exports = {db}

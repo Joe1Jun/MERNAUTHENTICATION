@@ -5,8 +5,8 @@ const express = require('express')
 const cors = require('cors')
 // Import the database connection function from db module
 const { db } = require('./db')
-// Import readdirSync function from fs module to read the routes directory
-//const { readdirSync } = require('fs')
+const userRoutes = require('./routes/users')
+const authRoutes = require('./routes/auth')
 // Create an instance of Express
 const app = express()
 
@@ -21,9 +21,13 @@ app.use(express.json())
 // Middleware to enable CORS (Cross-Origin Resource Sharing)
 app.use(cors())
 
+
+
+
 //routes
-// Dynamically read all files in the 'routes' directory and use them as routes
-//readdirSync('./routes').map((route) => app.use('/api/v1', require('./routes/' + route)))
+app.use('/api/users', userRoutes)
+app.use('/api/auth', authRoutes)
+
 
 // Function to start the server
 const server = () => {

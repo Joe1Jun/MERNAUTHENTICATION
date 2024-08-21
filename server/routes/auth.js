@@ -1,43 +1,42 @@
-const router = require('express').Router();
-const { User } = require("../models/user")
-const Joi = require('joi')
-const bcrypt = require('bcrypt')
+// Import necessary libraries and modules
+const router = require('express').Router(); // Import Express Router
+const { User } = require("../models/user"); // Import User model from the user module
+const bcrypt = require('bcrypt'); // Import bcrypt for password hashing
+const { validateLogin } = require('../validation/userValidation'); // Import validation functions from a utility file
 
+// Define a route for POST requests to the root path
 router.post('/', async (req, res) => {
     try {
-
-        const { error } = validate(req.body);
+        // Validate request body against schema
+        const { error } = validateLogin(req.body); 
         if (error) {
-              return res.status(400).send({message : error.details})
-          }
-        const user = await User.findOne({ email: req.body.email })
+            // Return a 400 Bad Request status if validation fails
+            return res.status(400).send({ message: error.details[0].message });
+        }
+
+        // Check if a user with the provided email exists
+        const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(401).send({message: "Invalid email or password"})
+            // Return a 401 Unauthorized status if no user found
+            return res.status(401).send({ message: "Invalid email or password" });
         }
 
-        const validPassword = await bcrypt.compare(
-            req.body.password, user.password)
-        
+        // Compare the provided password with the stored hashed password
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
-            return res.status(401).send({ message: "Invalid email or password" })
-            
+            // Return a 401 Unauthorized status if passwords do not match
+            return res.status(401).send({ message: "Invalid email or password" });
         }
+
+        // Generate an authentication token for the user
         const token = user.generateAuthToken();
-        res.status(200)({data: token, message: "Logged in successfully"})
-
+        // Return a 200 OK status with the token and success message
+        res.status(200).send({ data: token, message: "Logged in successfully" });
     } catch (error) {
-        res.status(500).send({message: "Internal server error"})
+        // Handle any unexpected errors
+        res.status(500).send({ message: "Internal server error" });
     }
+});
 
-})
-
-const validate = (data) => {
-    const schema = Joi.object({
-        email: Joi.string().email().required().label('Email'),
-        password: Joi.string().required().label('Password')
-
-    })
-    return schema.validate(data);
-
-}
+// Export the router to be used in other parts of the application
 module.exports = router;

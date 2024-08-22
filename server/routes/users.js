@@ -2,7 +2,7 @@
 const router = require('express').Router(); // Creates a new instance of an Express router for handling routes
 const { User } = require('../models/user'); // Import the User model from the user module
 const bcrypt = require('bcrypt'); // Import bcrypt for hashing passwords
-const { validateRegistration } = require('../utils/validation'); // Import validation functions from a utility file
+const { validateRegistration } = require('../validation/userValidation'); // Import validation functions from a utility file
 
 // Define a POST route handler for user registration
 router.post('/register', async (req, res) => {

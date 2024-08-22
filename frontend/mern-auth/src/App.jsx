@@ -1,14 +1,13 @@
-
+import React from 'react';
+import SignUp from './Component/SignUp/index';
 
 
 function App() {
   
 
   return (
-    <div>
-      Hello World
-    </div>
+    <SignUp/>
   );
 }
 
-export default App
+export default App;

@@ -27,9 +27,11 @@ router.post('/', async (req, res) => {
             // Return a 401 Unauthorized status if passwords do not match
             return res.status(401).send({ message: "Invalid email or password" });
         }
-
+        
         // Generate an authentication token for the user
         const token = user.generateAuthToken();
+        // Log the generated JWT token to the console
+        console.log("Generated JWT Token:", token);
         // Return a 200 OK status with the token and success message
         res.status(200).send({ data: token, message: "Logged in successfully" });
     } catch (error) {

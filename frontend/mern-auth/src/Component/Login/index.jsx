@@ -36,8 +36,16 @@ const Login = () => {
 
             // Send a POST request to the server with the form data
             const { data: res } = await axios.post(url, data);
-            // Store the received token in localStorage
-            localStorage.setItem("token", res.token);
+           
+            // Access the token from the response
+            const token = res.data;  // Correct way to access the token
+
+            // Log the token to the console for debugging
+          console.log("JWT Token:", token);
+
+         // Store the token in localStorage
+        localStorage.setItem("token", token);
+            
             // Redirect to the home page after successful login
             window.location = "/";
         } catch (error) {

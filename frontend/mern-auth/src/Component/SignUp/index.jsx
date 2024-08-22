@@ -1,76 +1,65 @@
 // Import necessary modules and components
-import { Link } from 'react-router-dom'; // Import Link component for navigation between routes
-import styles from './styles.modules.css' // Import CSS module for styling
-import { useState } from 'react'; // Import useState hook for managing component state
-import axios from 'axios'; // Import axios for making HTTP requests
-import { useNavigate } from 'react-router-dom'; // Add this import
+import { Link } from 'react-router-dom';
+import './styles.css'; // Import regular CSS file
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
+// Configure axios
+axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // Define the SignUp component
 const SignUp = () => {
-    // Define state variables for form data and error messages
     const [data, setData] = useState({
-        firstName: "", // Store the user's first name
-        lastName: "",  // Store the user's last name
-        email: "",     // Store the user's email
-        password: ""   // Store the user's password
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: ""
     });
 
-    const [error, setError] = useState(""); // Store any error messages
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
 
-    // Get the navigate function from useNavigate (This should be imported at the top)
-    const navigate = useNavigate(); // Initialize the navigate function for programmatic navigation
-
-    // Handle changes to form inputs
     const handleChange = ({ currentTarget: input }) => {
-        // Update the data state with the new value from the input field
         setData({ ...data, [input.name]: input.value });
     };
 
-    // Handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent the default form submission behavior
+        e.preventDefault();
 
-        // Check if all fields are filled out
-        if (data.firstName === "" || data.lastName === "" || data.email === "" || data.password === "") {
-            setError("Please fill out all fields."); // Set error message if any field is empty
+        // Log the data being sent to the backend
+         console.log("Form Data:", data);
+
+        if (Object.values(data).some(field => field === "")) {
+            setError("Please fill out all fields.");
             return;
         }
 
         try {
-            // Define the API endpoint URL
-            const url = "http://localhost:8080/api/users";
-
-            // Send a POST request to the server with the form data
-            const { data: res } = await axios.post(url, data);
-
-            // Navigate to the login page after successful sign-up
+            const response = await axios.post("/api/users/register", data);
+            console.log("Response:", response.data);
             navigate("/login");
-
-            // Log the response message to the console
-            console.log(res.message);
         } catch (error) {
-            // Handle any errors that occur during the request
             if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-                setError(error.response.data.message); // Set error message based on server response
+                setError(error.response.data.message);
             }
         }
     };
 
-    // Render the sign-up form
     return (
-        <div className={styles.signup_container}>
-            <div className={styles.signup_form_container}>
-                <div className={styles.left}>
+        <div className="signup-container">
+            <div className="signup-form-container">
+                <div className="left">
                     <h1>Welcome Back</h1>
                     <Link to="/login">
-                        <button type='button' className={styles.white_btn}>
+                        <button type='button' className="white-btn">
                             Sign in 
                         </button>
                     </Link>
                 </div>
-                <div className={styles.right}>
-                    <form className={styles.form_container} onSubmit={handleSubmit}>
+                <div className="right">
+                    <form className="form-container" onSubmit={handleSubmit}>
                         <h1>Create Account</h1>
                         <input type="text"
                             placeholder='First Name'
@@ -78,7 +67,7 @@ const SignUp = () => {
                             onChange={handleChange}
                             value={data.firstName}
                             required
-                            className={styles.input}
+                            className="input"
                         />
                         <input type="text"
                             placeholder='Last Name'
@@ -86,7 +75,7 @@ const SignUp = () => {
                             onChange={handleChange}
                             value={data.lastName}
                             required
-                            className={styles.input}
+                            className="input"
                         />
                         <input type="email"
                             placeholder='Email'
@@ -94,7 +83,7 @@ const SignUp = () => {
                             onChange={handleChange}
                             value={data.email}
                             required
-                            className={styles.input}
+                            className="input"
                         />
                         <input type="password"
                             placeholder='Password'
@@ -102,11 +91,10 @@ const SignUp = () => {
                             onChange={handleChange}
                             value={data.password}
                             required
-                            className={styles.input}
+                            className="input"
                         />
-                        {/* Display error message if it exists */}
-                        {error && <div className={styles.error_msg}>{error}</div>}
-                        <button type='submit' className={styles.green_btn}>
+                        {error && <div className="error-msg">{error}</div>}
+                        <button type='submit' className="green-btn">
                             Sign up
                         </button>
                     </form>
@@ -116,5 +104,4 @@ const SignUp = () => {
     );
 };
 
-// Export the SignUp component as the default export
 export default SignUp;

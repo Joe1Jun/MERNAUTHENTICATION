@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, required: true }, // Last name of the user
     email: { type: String, required: true, unique: true }, // Email of the user, must be unique
     password: { type: String, required: true }, // Password of the user, stored in hashed format
-    passwordConfirm: { type: String, required: true } // Password confirmation (used only for validation purposes)
+   
 });
 
 // Define a method on the schema to generate an authentication token
@@ -24,4 +24,4 @@ userSchema.methods.generateAuthToken = function () {
 const User = mongoose.model('User', userSchema);
 
 // Export the User model for use in other parts of the application
-module.exports = User;
+module.exports = { User } ;

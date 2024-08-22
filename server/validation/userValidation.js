@@ -7,7 +7,7 @@ const validateRegistration = (data) => {
         lastName: Joi.string().required().label('Last Name'),
         email: Joi.string().email().required().label('Email'),
         password: Joi.string().required().label('Password'),
-        passwordConfirm: Joi.string().required().valid(Joi.ref('password')).label('Password Confirmation') // Ensure passwordConfirm matches password
+    
     });
     return schema.validate(data);
 }

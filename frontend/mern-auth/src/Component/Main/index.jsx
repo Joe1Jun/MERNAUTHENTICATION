@@ -1,28 +1,21 @@
-import styles from './styles.modules.css'
-
+import './styles.css';
 
 const Main = () => {
-    
     const handleLogout = () => {
-          
-        localStorage.removeItem("token")
+        localStorage.removeItem("token");
         window.location.reload();
-      }
-    <div className={styles.main_container}>
-        <nav className={styles.navbar}>
-            <h1>fakebook</h1>
-            <button className={styles.white_btn} onClick={handleLogout}>
-                Logout
-            </button>
-             </nav>
-         </div>
+    };
 
+    return (
+        <div className="main-container">
+            <nav className="navbar">
+                <h1>fakebook</h1>
+                <button className="white-btn" onClick={handleLogout}>
+                    Logout
+                </button>
+            </nav>
+        </div>
+    );
+};
 
-
-
-
-
-
-
-}
 export default Main;
